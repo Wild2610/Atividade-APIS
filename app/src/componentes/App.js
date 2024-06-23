@@ -45,8 +45,8 @@ const App = ({
     event.preventDefault();
     // executar a função passada por props para lidar com o submit
     if (onSubmit) {
-    await onSubmit(event);
-    await fetchUsuarios()
+      await onSubmit(event);
+      await fetchUsuarios();
     }
   };
 

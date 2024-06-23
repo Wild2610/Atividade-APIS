@@ -2,22 +2,21 @@ import React, { useState } from "react";
 import App from "../componentes/App";
 
 const Deletar = () => {
-  const [id, setId] = useState('');
+  const [id, setId] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-  
-      const response = await fetch(`http://localhost:3030/deletar/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-      });
+    const response = await fetch(`http://localhost:3030/deletar/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-      if (response.ok) {
-        setId(''); 
-      }
+    if (response.ok) {
+      setId("");
+    }
   };
 
   return (

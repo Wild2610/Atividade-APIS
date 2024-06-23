@@ -59,8 +59,8 @@ app.post("/cadastro", (req, res) => {
     }
 
     if (results.length > 1) {
-      alert("Email já existente")
-      return res.status(403).send("O email já existe");      
+      alert("Email já existente");
+      return res.status(403).send("O email já existe");
     } else {
       const query = "INSERT INTO usuarios (nome, email) VALUES (?, ?)";
 
@@ -107,38 +107,36 @@ app.put("/alterar/:id", (req, res) => {
 });
 //rota pra deletar um usuario
 app.delete("/deletar/:id" /* passa o id como parametro na url*/, (req, res) => {
-    const id = req.params.id; // resgata o id na url
-  
-    // verificar se o id foi fornecido
-    if (!id) {
-      return res.status(400).send("ID é obrigatório");
+  const id = req.params.id; // resgata o id na url
+
+  // verificar se o id foi fornecido
+  if (!id) {
+    return res.status(400).send("ID é obrigatório");
+  }
+
+  const queryVerificaId = "SELECT * FROM usuarios WHERE id=?";
+
+  db.query(queryVerificaId, [id], (err, results) => {
+    if (err) {
+      console.error(`Erro ao tentar encontrar ID: ${err.stack}`);
+      return res.status(500).send("Erro ao tentar encontrar ID");
     }
-  
-    const queryVerificaId = 'SELECT * FROM usuarios WHERE id=?';
-  
-    db.query(queryVerificaId, [id], (err, results) => {
+
+    if (results.length == 0) {
+      return res.status(403).send("ID não existe");
+    }
+
+    const query = "DELETE FROM usuarios WHERE id = ?";
+
+    db.query(query, [id], (err, results) => {
       if (err) {
-        console.error(`Erro ao tentar encontrar ID: ${err.stack}`);
-        return res.status(500).send('Erro ao tentar encontrar ID');
+        console.error("Erro ao deletar usuário: " + err.stack);
+        return res.status(500).send("Erro ao deletar usuário.");
       }
-  
-      if (results.length == 0) {
-        return res.status(403).send('ID não existe');
-      }
-  
-      const query = "DELETE FROM usuarios WHERE id = ?";
-  
-      db.query(query, [id], (err, results) => {
-        if (err) {
-          console.error("Erro ao deletar usuário: " + err.stack);
-          return res.status(500).send("Erro ao deletar usuário.");
-        }
-        res.status(200).send("Usuário deletado com sucesso!");
-      });
+      res.status(200).send("Usuário deletado com sucesso!");
     });
   });
-
-
+});
 
 // iniciar servidor
 app.listen(port, () => {
